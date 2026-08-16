@@ -1,0 +1,15 @@
+{
+  "page_content": "The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism.",
+  "metadata": {
+    "fonte": "attention_is_all_you_need.md",
+    "documento_id": "doc_attention_2017",
+    "chunk_index": 0,
+    "estrategia": "fixo_overlap",
+    "chunk_size": 500,
+    "chunk_overlap": 50,
+    "n_caracteres": 242,
+    "secao_heading": "1 Introduction",
+    "data_processamento": "2026-08-12T17:15:00",
+    "idioma": "en"
+  }
+}

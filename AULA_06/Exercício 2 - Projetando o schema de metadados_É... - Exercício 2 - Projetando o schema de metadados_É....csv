@@ -1,0 +1,11 @@
+Campo,Tipo de Dado,Descrição
+fonte,string,Nome do arquivo .md de origem (ex: attention_is_all_you_need.md).
+documento_id,string,Identificador único do documento (ex: doc_attention_01).
+chunk_index,integer,"Posicionamento sequencial do chunk dentro do documento (ex: 0, 1, 2...)."
+estrategia,string,"Estratégia de chunking utilizada (ex: fixo_overlap, recursivo, paragrafo)."
+chunk_size,integer,Configuração de tamanho máximo utilizada na divisão (ex: 500).
+chunk_overlap,integer,Configuração de sobreposição (overlap) utilizada (ex: 50).
+n_caracteres,integer,Contagem real do total de caracteres presentes no chunk.
+secao_heading (próprio),string,O título ou seção do Markdown onde o trecho está localizado.
+data_processamento (próprio),string,Data e hora em que a conversão/chunking foi executada.
+idioma (próprio),string,"Idioma detectado no texto original do chunk (ex: pt, en)."
