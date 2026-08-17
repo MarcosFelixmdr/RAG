@@ -5,29 +5,29 @@
 ### 1.1 Descrição do Problema
 
 #### Qual é o problema que você deseja resolver?
-Em uma temporada regular da NBA, cada time joga 82 partidas em um ritmo insano, muitas vezes com jogos em dias seguidos (*back-to-back*) e viagens longas. A comissão técnica gera um volume enorme de relatórios e anotações sobre os adversários, mas os treinadores e analistas não têm tempo para re-ler arquivos de 30 páginas para achar uma resposta rápida antes de entrar em quadra. O problema é a dificuldade de extrair dados táticos específicos, atualizados e confiáveis em poucos segundos.
+Em uma temporada regular da NBA, cada time joga 82 partidas em um ritmo acelerado, muitas vezes com jogos em dias seguidos e viagens longas. A comissão técnica gera um volume grande de relatórios e anotações sobre os adversários, mas os treinadores e analistas não têm tempo para re-ler arquivos de 30 páginas para achar uma resposta rápida antes de entrar em quadra. O problema é a dificuldade de extrair dados táticos específicos, atualizados e confiáveis em poucos segundos.
 
 #### Quem utilizaria a aplicação?
-* **Cargo:** Assistente Técnico (*Assistant Coach*), Coordenador de Vídeo (*Video Coordinator*) e Analista de Desempenho (*Scouting Analyst*).
-* **Contexto de uso:** No vestiário antes do jogo, no hotel durante a preparação da partida ou na beira da quadra (*bench*) entre os quartos do jogo, ajustando o plano tático no tablet.
+* **Cargo:** Assistente Técnico, Coordenador de Vídeo e Analista de Desempenho.
+* **Contexto de uso:** No vestiário antes do jogo, no hotel durante a preparação da partida ou na beira da quadra entre os quartos do jogo, ajustando o plano tático no tablet.
 * **Nível técnico:** Domínio absoluto de basquete e estratégia tática, mas nível básico a intermediário em tecnologia. Precisam fazer perguntas em linguagem natural e receber respostas imediatas sem depender de comandos complexos.
 
 #### Que tipo de informação o usuário gostaria de consultar?
-* Tendências de esquemas defensivos e ofensivos dos adversários (ex: como reagem a dobras, se usam *Drop Coverage* ou troca de marcação no *Pick and Roll*).
-* Preferências e hábitos de jogadores específicos em situações de pressão (ex: direção da infiltração, arremessos da zona morta).
-* Padrões de jogadas desenhadas para momentos decisivos (*clutch time*) ou saídas de fundo de quadra.
+* Tendências de esquemas defensivos e ofensivos dos adversários exemplo: como reagem a dobras, se usam Drop Coverage ou troca de marcação no Pick and Roll.
+* Preferências e hábitos de jogadores específicos em situações de pressão exemplo: direção da infiltração, arremessos da zona morta.
+* Padrões de jogadas desenhadas para momentos decisivos (clutch time) ou saídas de fundo de quadra.
 * Comparativo de mudanças na rotação do rival nos últimos 5 ou 10 jogos.
 
 #### De onde vêm essas informações?
-Os dados vêm dos relatórios internos da própria comissão técnica, arquivos Markdown/PDF exportados de softwares de análise de vídeo (como *Synergy Sports* e *Hudl*), anotações de olheiros e cadernos de jogadas (*playbooks*) digitais da equipe.
+Os dados vêm dos relatórios internos da própria comissão técnica, arquivos Markdown/PDF exportados de softwares de análise de vídeo, anotações de olheiros e cadernos de jogadas digitais da equipe.
 
 #### Por que utilizar um LLM sozinho não seria suficiente?
 1. **Dados Privados e Estratégicos:** Relatórios de *scouting* são dados sigilosos da franquia. Um LLM público/comercial não tem acesso aos documentos internos do time.
 2. **Falta de Atualização em Tempo Real:** Um modelo base não sabe que um rival trocou a forma de defender há três dias ou que um jogador titular entrou na lista de lesionados.
-3. **Risco Crítico de Alucinação:** Se o LLM inventar que um arremessador prefere ir para a esquerda quando a tendência real dele é ir para a direita, a instrução passada ao atleta em quadra estará errada e pode custar o jogo.
+3. **Risco Crítico de Alucinação:** Se o LLM inventar que um arremessador prefere ir para a esquerda quando a tendência real dele é ir para a direita, a instrução passada ao jogador em quadra estará errada e pode custar o jogo.
 
 #### Como o usuário vai utilizar o sistema?
-Através de um **aplicativo web responsivo (Web App)** otimizado para navegação em **iPads/tablets**, que é a ferramenta que a comissão técnica já usa na beira da quadra e nas reuniões de vídeo.
+Através de um **aplicativo web** otimizado para navegação em **iPads/tablets**, que é a ferramenta que a comissão técnica já usa na beira da quadra e nas reuniões de vídeo.
 
 ---
 
@@ -41,7 +41,7 @@ Através de um **aplicativo web responsivo (Web App)** otimizado para navegaçã
 ### 1.2 Por que RAG?
 
 #### Por que RAG é adequado para esse problema?
-O RAG é a arquitetura perfeita para este cenário porque resolve três limitações centrais de um LLM puro: a **falta de dados privados**, a **defasagem temporal** e a **tendência a alucinar**. Ele permite conectar a capacidade de síntese e linguagem do modelo diretamente aos relatórios táticos atualizados da comissão técnica, funcionando como uma busca inteligente que fundamenta cada resposta em evidências reais antes de responder ao treinador.
+O RAG é ideal para este cenário porque resolve três limitações centrais de um LLM puro: a **falta de dados privados**, a **defasagem temporal** e a **tendência a alucinar**. Ele permite conectar a capacidade de síntese e linguagem do modelo diretamente aos relatórios táticos atualizados da comissão técnica, funcionando como uma busca inteligente que fundamenta cada resposta em evidências reais antes de responder ao treinador.
 
 #### Que tipo de conhecimento precisa ser fornecido ao modelo?
 Precisa ser fornecido um conhecimento altamente especializado e proprietário, incluindo:
@@ -102,9 +102,7 @@ O RAG é excelente para interpretação semântica e síntese de contexto não e
   WHERE player_name = 'Jayson Tatum' AND zone_defense = TRUE
   ORDER BY game_date DESC LIMIT 5;
 
-Aqui está a **Parte 2 - Organização dos documentos** no formato `.md`, mantendo a linguagem técnica, direta e totalmente alinhada ao cenário de *scouting* da NBA:
 
-```markdown
 # Parte 2 - Organização dos Documentos
 
 ## Cenário A: Assistente de Scouting e Análise Tática para Franquia da NBA
@@ -113,14 +111,14 @@ Aqui está a **Parte 2 - Organização dos documentos** no formato `.md`, manten
 
 * **Tipos de arquivo:**
   * **Markdown (`.md`):** Formato principal dos relatórios de *scouting* e análises de pós-jogo, por facilitar a estruturação em tópicos e a extradição de metadados.
-  * **PDF (`.pdf`):** Relatórios formais de dados estatísticos/físicos exportados de plataformas externas (como *Synergy Sports* ou *Second Spectrum*).
+  * **PDF (`.pdf`):** Relatórios formais de dados estatísticos/físicos exportados de plataformas externas.
   * **JSON (`.json`):** Transcrições estruturadas de reuniões de vídeo e marcações de minutagem de jogadas.
 
 * **Volume aproximado:**
   * **Centenas de documentos** por temporada. Em média, são gerados de 3 a 5 relatórios por partida (82 jogos na fase regular + *playoffs*), totalizando cerca de 300 a 400 documentos por ano por franquia.
 
 * **Tamanho típico de cada documento:**
-  * De **2 a 8 páginas** por relatório (aproximadamente **15 KB a 100 KB** por arquivo no formato texto/markdown). São documentos enxutos, focados em tópicos operacionais e táticos.
+  * De **2 a 8 páginas** por relatório (aproximadamente **15 KB a 100 KB** por arquivo no formato texto/markdown). São documentos grandes, focados em tópicos operacionais e táticos.
 
 * **Frequência de entrada e ciclo de vida:**
   * **Entrada de novos arquivos:** Diária ou a cada 2 dias (acompanhando o calendário oficial de jogos).
@@ -130,7 +128,7 @@ Aqui está a **Parte 2 - Organização dos documentos** no formato `.md`, manten
 
 ### 2.2 Proposta da Estrutura de Pastas
 
-```text
+```
 documentos_scouting/
 ├── 2025-2026/
 │   ├── adversarios/
@@ -166,7 +164,7 @@ Quando o assistente técnico vai preparar a equipe para o jogo da noite contra o
 
 * **Documentos proibidos na base de RAG:**
 1. **Dados Médicos e Fisiológicos Pessoais:** Exames de imagem (ressonâncias), relatórios médicos confidenciais e registros de lesões protegidos por sigilo/hipaa/direitos dos atletas.
-2. **Contratos e Informações Financeiras:** Salários, clausulas contratuais, negociações de *trade* e dados do teto salarial (*salary cap*).
+2. **Contratos e Informações Financeiras:** Salários, clausulas contratuais, negociações de *trade* e dados do teto salarial.
 3. **Rascunhos e Anotações Não Validadas:** Arquivos temporários de vídeo que ainda não passaram pelo crivo do coordenador da análise.
 
 
@@ -187,11 +185,6 @@ Quando o assistente técnico vai preparar a equipe para o jogo da noite contra o
 
 
 
-```
-
-```
-
-
 # Parte 3 - Pipeline de Ingestão
 
 ## Cenário A: Assistente de Scouting e Análise Tática para Franquia da NBA
@@ -200,7 +193,7 @@ Quando o assistente técnico vai preparar a equipe para o jogo da noite contra o
 
 O pipeline transforma os arquivos brutos produzidos pela equipe de vídeo e *scouting* em vetores pesquisáveis no banco vetorial. O fluxo segue estas etapas encadeadas:
 
-```text
+```
 [ Documentos Brutos (.md, .pdf, .json) ]
                   │
                   ▼
@@ -224,8 +217,6 @@ O pipeline transforma os arquivos brutos produzidos pela equipe de vídeo e *sco
 ### 3.1 Detalhamento da Etapa de Extração
 
 Nesta etapa, o objetivo é converter arquivos heterogêneos de *scouting* e análise em texto estruturado sem perda de contexto tático.
-
----
 
 #### Como o texto seria extraído por tipo de documento?
 
@@ -260,7 +251,6 @@ Nesta etapa, o objetivo é converter arquivos heterogêneos de *scouting* e aná
 
 3. **Caso Concreto (Problema Enfrentado na Aula 04 / Atividades Anteriores):**
    * *Caso:* Ao processar arquivos Markdown/PDF na Aula 04 contendo código ou tabelas táticas simples, a leitura direta por quebra de linha simples desformatava os cabeçalhos das seções e colava o título da seção seguinte no final do último parágrafo da seção anterior. Isso gerou *chunks* misturando assuntos distintos (como juntar as observações sobre o ataque com as instruções sobre a defesa), o que poluiu a busca semântica do retriever.
-
 
 
 ### 3.2 Detalhamento da Etapa de Limpeza e Normalização
@@ -354,7 +344,7 @@ Os metadados no nível de documento são atribuídos no momento da ingestão e s
 
 #### Schema JSON do Documento
 
-```json
+json
 {
   "document_id": "doc_scout_bos_20260310_01",
   "title": "Relatório de Scouting Pré-Jogo - Boston Celtics",
@@ -380,7 +370,7 @@ Enquanto os metadados do documento descrevem o arquivo como um todo, os metadado
 
 #### Schema JSON do Chunk
 
-```json
+json
 {
   "document_id": "doc_scout_bos_20260310_01",
   "chunk_id": "doc_scout_bos_20260310_01-c04",
@@ -399,14 +389,13 @@ Enquanto os metadados do documento descrevem o arquivo como um todo, os metadado
 
 Aqui está o bloco completo da **Subseção 4.2 - Metadados do Chunk** em formato `.md`, respondendo a todas as perguntas do checklist com foco absoluto no cenário da NBA:
 
-```markdown
 ### 4.2 Metadados do Chunk
 
 Enquanto os metadados do documento descrevem o arquivo como um todo, os metadados do *chunk* trazem granularidade tática ao trecho específico de texto. Isso garante precisão cirúrgica no *retrieval* e citação exata de fonte.
 
 #### Schema JSON do Chunk
 
-```json
+json
 {
   "document_id": "doc_scout_bos_20260310_01",
   "chunk_id": "doc_scout_bos_20260310_01-c04",
@@ -421,7 +410,6 @@ Enquanto os metadados do documento descrevem o arquivo como um todo, os metadado
   "is_latest": true,
   "text": "Contra o Pick and Roll no topo da chave, o Celtics utiliza Drop Coverage com Al Horford recuado no garrafão, enquanto Tatum passa por cima do bloqueio para contestar o arremesso de média distância."
 }
-
 ```
 
 ---
@@ -460,10 +448,10 @@ Se o sistema fizer uma busca vetorial simples por "defesa de Pick and Roll", o m
 
 > **Resposta da IA:**
 > *"O Boston Celtics utiliza Drop Coverage contra o Pick and Roll no topo, mantendo o pivô recuado na área pintada e forçando o arremessador para a meia distância."*
-> 📌 **Fonte Consultada:**
-> 📄 *Relatório de Scouting Pré-Jogo - Boston Celtics*
-> 📅 **Data:** 10/03/2026 | 📖 **Seção:** *Defesa de Pick and Roll* (Pág. 2)
-> 👤 **Analista:** *Lucas Silva (Head of Scouting)*
+>  **Fonte Consultada:**
+>  *Relatório de Scouting Pré-Jogo - Boston Celtics*
+>  **Data:** 10/03/2026 |  **Seção:** *Defesa de Pick and Roll* (Pág. 2)
+>  **Analista:** *Lucas Silva (Head of Scouting)*
 
 ---
 
@@ -491,8 +479,6 @@ A extração utiliza uma estratégia em três camadas durante a ingestão:
 
 3. **Extração Semântica Estruturada via LLM (LLM-Based Extraction):**
 * Antes do embedding, o texto do chunk passa por um modelo LLM leve com **Structured Output (JSON Schema / Pydantic)** para identificar entidades citadas no texto, preenchendo os campos `jogadores_foco` e `fase_jogo`.
-
-
 
 ```
 
@@ -645,8 +631,6 @@ Análises táticas misturam inglês (linguagem padrão do basquete mundial, como
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  Aqui está o bloco completo da **Parte 1 - Identificação dos Problemas** adaptado para o **Cenário B: Recomendador e Assistente de Leitura / Curadoria Editorial de Livros**, seguindo exatamente a mesma estrutura detalhada e profissional aplicada ao cenário da NBA.
-
 ---
 
 # Parte 1 - Identificação dos Problemas
@@ -673,7 +657,6 @@ Além disso, equipes editoriais lidam com centenas de manuscritos, resenhas e re
 * **Cargo:** Leitor comum / Assinante de e-commerce ou biblioteca digital.
 * **Contexto de Uso:** Busca por próximas leituras via aplicativo mobile ou web no momentos de lazer.
 * **Nível Técnico:** Leigo.
-
 
 
 ---
@@ -756,9 +739,9 @@ Se o LLM dependesse apenas de seu treino original, ele sofreria de **alucinaçã
 > **Pergunta do Editor:**
 > *"Qual livro de suspense do nosso catálogo possui uma narrativa não linear focada em trauma familiar, recomendado para leitores que gostaram de 'A Garota no Trem'?"*
 
-> ❌ **Resposta Errada do LLM Sem RAG:**
+>  **Resposta Errada do LLM Sem RAG:**
 > *"Recomendo o livro **'O Segredo da Casa Amarela'**, de Juliana Mendes, publicado pela sua editora em 2023. É um suspense claustrofóbico que conta a história de uma mulher com amnésia tentando recuperar as memórias de sua infância através de diários encontrados no sótão."*
-> ⚠️ **O Erro:** O livro *"O Segredo da Casa Amarela"* **não existe** no catálogo da editora (o LLM alucinou o título e a autora), e o enredo descrito é uma fusão genérica de clichês do gênero que não corresponde a nenhuma obra do acervo real.
+>  **O Erro:** O livro *"O Segredo da Casa Amarela"* **não existe** no catálogo da editora (o LLM alucinou o título e a autora), e o enredo descrito é uma fusão genérica de clichês do gênero que não corresponde a nenhuma obra do acervo real.
 
 ### 1.3 Limitações — Quando RAG Não É a Resposta
 
@@ -782,8 +765,6 @@ Abaixo estão três alternativas analíticas para este cenário:
 * *Aplicações:* Para responder a perguntas complexas do leitor ou editor que combinem necessidades semânticas ("livros com atmosfera melancólica") com restrições estruturadas ("publicados entre 2021 e 2023 com menos de 300 páginas").
 * *Como funciona:* Um agente roteador identifica o tipo de intenção do usuário: direciona filtros de metadados rígidos para a camada SQL/Filtros e a busca de enredo/tom para o índice vetorial, combinando os resultados antes de enviar o prompt ao LLM.
 
-
-
 ---
 
 #### Existe alguma pergunta, dentro do seu próprio cenário, que RAG responderia mal e um banco de dados relacional responderia bem? Qual, e por quê?
@@ -802,7 +783,6 @@ FROM catalogo_livros
 WHERE genero = 'Ficção Científica' AND ano_publicacao > 2020;
 
 ```
-
 
 Retorna o valor exato, determinístico e instantâneo em microssegundos sem dependência de modelos de linguagem.
 
@@ -844,7 +824,7 @@ Se o usuário fizesse uma pergunta como *"Ordene todos os pareceres de leitura d
 
 ### 2.2 Proposta da Estrutura de Pastas
 
-```text
+```
 acervo_editorial/
 ├── catalogo_publicado/
 │   ├── ficcao/
@@ -865,9 +845,7 @@ acervo_editorial/
     └── taxonomia_tematica_2026.json
 
 
-Aqui está o bloco completo da **Parte 2 - Organização dos Documentos** adaptado para o **Cenário B: Assistente de Curadoria Editorial e Recomendação Literária**, mantendo a linguagem técnica, direta e alinhada ao mercado editorial:
-
-```markdown
+```
 # Parte 2 - Organização dos Documentos
 
 ## Cenário B: Assistente de Curadoria Editorial e Recomendação Literária
@@ -895,7 +873,7 @@ Aqui está o bloco completo da **Parte 2 - Organização dos Documentos** adapta
 
 ### 2.2 Proposta da Estrutura de Pastas
 
-```text
+```
 acervo_editorial/
 ├── catalogo_publicado/
 │   ├── ficcao/
@@ -956,7 +934,6 @@ Isola em uma única pasta o livro completo (`.epub`), os pareceres internos (`.m
 3. **Filtro Padrão no Pre-Retrieval:** As buscas do sistema aplicam, por padrão, o filtro rígido `is_latest == true`. A versão antiga só é recuperada se o editor solicitar explicitamente um histórico de revisões (ex: *"O que mudou do primeiro parecer para a versão final do manuscrito?"*).
 
 
-
 ```
 
 ```
@@ -1007,8 +984,6 @@ Para manuscritos antigos ou pareceres físicos digitalizados sem camada de texto
 * **Fluxo Padrão (Alto Volume):** Renderização da página em 300 DPI via `pdf2image` e aplicação do **`Tesseract OCR`** configurado para o idioma português (`lang='por'`).
 * **Fluxo de Alta Complexidade (Caligrafia/Fontes Raras):** Envio da imagem da página para modelos de visão (**`GPT-4o`** ou **`Claude 3.5 Sonnet`**) solicitando transcrição direta e estruturação sintática em Markdown.
 
-
-
 ---
 
 ### 4. Tratamento de Tabelas
@@ -1040,10 +1015,6 @@ Imagens brutas em pixels não podem ser convertidas diretamente em embeddings ve
 * *Ação:* A imagem da capa é enviada a um modelo multimodal para gerar uma descrição textual (*captioning*) gravada no metadado da obra:
 > *"Descrição Visual da Capa: Ilustração vetorial em tons escuros de azul e violeta, mostrando uma silhueta feminina diante de uma casa isolada sob neblina. Transmite tom de suspense, mistério e isolamento."*
 
-
-
-
-
 ---
 
 ### 6. Tratamento de Documentos Multimodais
@@ -1054,8 +1025,6 @@ Muitas campanhas editoriais modernas acompanham materiais audiovisuais (audioliv
 * **Vídeos (Booktrailers / Entrevistas Gravadas):**
 1. O áudio é extraído via `ffmpeg` e transcrito pelo `Whisper`.
 2. Frames-chave do vídeo (amostrados a cada 5 segundos ou em mudanças de cena) são analisados por um modelo de visão para descrever o apelo visual da campanha de marketing.
-
-
 
 ---
 
@@ -1134,8 +1103,6 @@ No ambiente editorial, a ingestão de dados precisa acompanhar o ritmo de produ�
 * **Relatórios de Leitura e Manuscritos (*Fluxo Contínuo*):** Chegada de 15 a 30 novos relatórios (*reader reports*) por semana, enviados pela equipe de pareceristas.
 * **Novos Livros Publicados (*Lançamentos*):** Entrada de 5 a 20 novos títulos finalizados por mês, conforme o cronograma do plano editorial.
 
-
-
 ---
 
 #### Reprocessamento: Apenas o documento atualizado ou a base inteira?
@@ -1210,7 +1177,6 @@ Aqui está o detalhamento completo dos **Metadados do Documento (Parte 4.1)** ad
 * **`publico_alvo` (`string`):** Classificação indicativa (`Infantojuvenil`). Garante que as recomendações respeitem a faixa etária do leitor.
 * **`is_latest` e `nivel_acesso` (`boolean` / `string`):** `is_latest: true` assegura que a busca só retorne a edição mais recente revisada, enquanto `nivel_acesso: "publico_geral"` libera o documento para consultas de leitores no aplicativo final.
 
-
 # Parte 4.2 - Metadados do Chunk (Caso "Harry Potter")
 
 ## 1. Schema JSON Final do Chunk
@@ -1278,10 +1244,10 @@ Sem os filtros `nome_serie == "Harry Potter"`, `ordem_serie == 1` e `document_ty
 
 > **Resposta do Assistente:**
 > *"Harry descobre sua casa durante a cerimônia de abertura em Hogwarts, quando o Chapéu Seletor pondera entre a Sonserina e a Grifinória, decidindo finalmente enviá-lo para a Grifinória após ouvir o desejo do garoto."*
-> 📌 **Fonte Consultada:**
-> 📖 **Obra:** *Harry Potter e a Pedra Filosofal* (Volume 1) — J.K. Rowling
-> 📍 **Localização:** *Capítulo 7: O Chapéu Seletor* (Pág. 108)
-> 🏷️ **Categoria:** *Texto Integral — Catálogo Publicado*
+>  **Fonte Consultada:**
+>  **Obra:** *Harry Potter e a Pedra Filosofal* (Volume 1) — J.K. Rowling
+>  **Localização:** *Capítulo 7: O Chapéu Seletor* (Pág. 108)
+>  **Categoria:** *Texto Integral — Catálogo Publicado*
 
 ---
 
@@ -1378,18 +1344,11 @@ A divisão é **hierárquica**, priorizando seções e parágrafos, e caindo par
 2. **Chunking de Tabela Inteira (*Atomic Table Chunking*):** Tratar a tabela como um objeto atômico indivisível.
 3. **Injeção de Cabeçalho (*Header Injection*):** Se a tabela for inevitavelmente maior que o limite do chunk, repetir a linha de cabeçalho (`Header`) em **todos** os sub-chunks da tabela para preservar o contexto das colunas.
 
-
-
-
 * **Tratamento de Imagens e Ilustrações (ex: mapas de Hogwarts, ilustrações de capítulos):**
 * **Uma imagem pura não possui vetor de texto.**
 * **Solução:**
 1. **Descrição Visual por Multimodalidade (Vision LLM / Image-to-Text):** Durante a ingestão, a imagem (como o mapa dos Marotos ou a capa do livro) passa por um modelo visual que gera uma descrição textual detalhada (`caption`).
 2. **Armazenamento:** A descrição em texto é indexada no chunk com o metadado `is_image: true` e a URL/caminho do arquivo de imagem original, permitindo que a imagem seja recuperada e exibida na interface do usuário quando a cena for citada.
-
-
-
-
 
 ---
 
@@ -1414,7 +1373,6 @@ Montaríamos um *Golden Dataset* com 100 perguntas representativas do acervo de 
 #### 3. Evidência de Ausência de Fragmentação de Informação (*Boundary Failure Rate*)
 
 Coletaríamos métricas de respostas geradas pela LLM avaliando se houve **cortes na resposta** por falta de contexto (ex: a LLM responder *"O texto não menciona quem ganhou a partida porque a frase é cortada"*). Uma taxa de falha de borda (*boundary failure*) próxima de **0%** é a evidência definitiva de que o tamanho do chunk e o *overlap* foram configurados corretamente.
-
 
 # Parte 6 - Embeddings
 
@@ -1454,8 +1412,6 @@ Para atender ao ecossistema da editora (aplicativo de recomendação literária 
 * **Motivos do Descarte:**
 * O `text-embedding-ada-002` foi descartado por ser um modelo de geração anterior, apresentando desempenho inferior em testes multilíngues em português se comparado ao `text-embedding-3-large`, além de possuir dimensões fixas sem suporte a redução dinâmica.
 * O `bge-large-en-v1.5` foi descartado porque sua otimização primária é focada no idioma inglês, apresentando degradação ao lidar com expressões idiomáticas e nuances do português do Brasil presente nas traduções de *Harry Potter* e nos relatórios de leitura nacionais.
-
-
 
 #### 2. Se o cenário envolve documentos sigilosos, isso muda sua escolha entre modelo local e API? Como?
 
@@ -1566,6 +1522,3 @@ No entanto, para que você tenha a documentação oficial dos recursos, modelos 
 # Como você usou IA para te apoiar nessa atividade? Quais ferramentas? Como você avaliou e verificou a resposta dela? 
 
 Usei IA para dados e termos que eu não tinha conhecimento, estruturação do arquivo md, informações adicionais relevantes, revisão e pesquisa.
-
-
-
