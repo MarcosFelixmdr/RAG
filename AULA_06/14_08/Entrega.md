@@ -37,7 +37,6 @@ Através de um **aplicativo web** otimizado para navegação em **iPads/tablets*
 2. *"Qual é a tendência do Tatum na infiltração quando ele recebe a dobra no lado esquerdo da quadra?"*
 3. *"O Boston mudou alguma jogada de fundo de quadra em relação ao jogo do mês passado contra a gente?"*
 
-
 ### 1.2 Por que RAG?
 
 #### Por que RAG é adequado para esse problema?
@@ -63,7 +62,6 @@ O modelo responderia com base em estatísticas médias genéricas da internet, d
 * **Pergunta do Assistente Técnico:** *"Como o Denver Nuggets está defendendo a dobra de marcação no topo da chave no segundo tempo?"*
 * **Resposta de um LLM sem RAG (apenas pré-treino):** *"O Denver Nuggets costuma utilizar uma defesa em zona 2-3 para proteger o garrafão e forçar arremessos do perímetro, confiando na mobilidade de seus alas para fechar os espaços."*
 * **Por que essa resposta é um desastre:** Na vida real, o Denver Nuggets roda uma defesa de homem-a-homem com o Nikola Jokić atuando em *Drop Coverage* ou *Show/Recover*, e quase nunca usa zona 2-3 como defesa principal. Se o treinador acreditasse nessa resposta da IA, desenharia um ataque contra zona e o time perderia posses de bola decisivas no jogo.
-
 
 ### 1.3 Limitações - Quando RAG Não É a Resposta
 
@@ -101,7 +99,6 @@ O RAG é excelente para interpretação semântica e síntese de contexto não e
   FROM player_stats
   WHERE player_name = 'Jayson Tatum' AND zone_defense = TRUE
   ORDER BY game_date DESC LIMIT 5;
-
 
 # Parte 2 - Organização dos Documentos
 
@@ -167,13 +164,10 @@ Quando o assistente técnico vai preparar a equipe para o jogo da noite contra o
 2. **Contratos e Informações Financeiras:** Salários, clausulas contratuais, negociações de *trade* e dados do teto salarial.
 3. **Rascunhos e Anotações Não Validadas:** Arquivos temporários de vídeo que ainda não passaram pelo crivo do coordenador da análise.
 
-
 * **Mecanismos de Prevenção:**
 * **Validação por Schema na Ingestão (CI/CD / Script de Carga):** O script de ingestão verifica se o arquivo possui a estrutura de cabeçalho válida (YAML front-matter) e se está localizado dentro das pastas permitidas (`/adversarios/` ou `/interno/`).
 * **Filtro por Extensão e Nomenclatura:** Extensões não homologadas (`.docx`, `.xlsx`) ou arquivos marcados com a tag `status: draft` ou `sigiloso: true` no metadata são ignorados automaticamente pelo pipeline.
 * **Controle de Acesso ao Repositório (RBAC):** A pasta onde o pipeline de RAG lê os arquivos é isolada e tem acesso restrito apenas aos analistas de desempenho autorizados.
-
-
 
 #### Como você lidaria com VERSÕES do mesmo documento?
 
@@ -182,8 +176,6 @@ Quando o assistente técnico vai preparar a equipe para o jogo da noite contra o
 1. **Versionamento via Metadados Obrigatórios (`data_partida` + `versao`):** Todo chunk armazenado na Vector Store obrigatoriamente carrega a data do relatório e o número da versão do jogo.
 2. **Filtro de Recência no Pre-Retrieval:** Por padrão, as buscas para o jogo de hoje aplicam o filtro para buscar apenas chunks da partida mais recente ou da temporada vigente (`temporada == '2025-2026'`).
 3. **Depreciação/Soft Delete:** Quando um novo relatório de *scouting* do mesmo adversário entra no sistema, o pipeline marca os vetores da versão anterior no banco com a tag `status: arquivado` ou `is_latest: false`. O retriever ignora vetores onde `is_latest == false`, a menos que o técnico pergunte explicitamente: *"O que mudou na defesa do Celtics em relação ao primeiro jogo do ano?"*.
-
-
 
 # Parte 3 - Pipeline de Ingestão
 
@@ -252,7 +244,6 @@ Nesta etapa, o objetivo é converter arquivos heterogêneos de *scouting* e aná
 3. **Caso Concreto (Problema Enfrentado na Aula 04 / Atividades Anteriores):**
    * *Caso:* Ao processar arquivos Markdown/PDF na Aula 04 contendo código ou tabelas táticas simples, a leitura direta por quebra de linha simples desformatava os cabeçalhos das seções e colava o título da seção seguinte no final do último parágrafo da seção anterior. Isso gerou *chunks* misturando assuntos distintos (como juntar as observações sobre o ataque com as instruções sobre a defesa), o que poluiu a busca semântica do retriever.
 
-
 ### 3.2 Detalhamento da Etapa de Limpeza e Normalização
 
 A etapa de limpeza e normalização garante que o texto extraído fique higienizado, legível e livre de ruídos estruturais que possam poluir o cálculo de similaridade vetorial ou gastar tokens desnecessariamente no LLM.
@@ -291,8 +282,6 @@ A etapa de limpeza e normalização garante que o texto extraído fique higieniz
 
 3. **Métricas Negativas ou Condicionais:**
    Filtros ingênuos que removem palavras de parada (*stop words*) ou pontuações podem alterar completamente o significado tático de uma instrução. Por exemplo, apagar pontuações ou palavras curtas pode transformar a frase *"Não faz dobras no perímetro"* em *"Faz dobras no perímetro"*, invertendo a orientação tática dada ao time.
-
-
 
 ### 3.3 Detalhamento da Frequência de Ingestão e Ciclo de Vida
 
@@ -363,7 +352,6 @@ json
   "nivel_acesso": "comissao_tecnica"
 }
 
-
 ### 4.2 Metadados do Chunk
 
 Enquanto os metadados do documento descrevem o arquivo como um todo, os metadados do *chunk* trazem granularidade tática ao trecho específico de texto. Isso garante precisão cirúrgica no *retrieval* e citação exata de fonte.
@@ -385,7 +373,6 @@ json
   "is_latest": true,
   "text": "Contra o Pick and Roll no topo da chave, o Celtics utiliza Drop Coverage com Al Horford recuado no garrafão, enquanto Tatum passa por cima do bloqueio para contestar o arremesso de média distância."
 }
-
 
 Aqui está o bloco completo da **Subseção 4.2 - Metadados do Chunk** em formato `.md`, respondendo a todas as perguntas do checklist com foco absoluto no cenário da NBA:
 
@@ -435,7 +422,6 @@ json
 * **Exemplo de Pergunta em que o Filtro é Indispensável:**
 > *"Como o Boston Celtics defendeu o Pick and Roll nos últimos jogos sem o Porziņģis em quadra?"*
 
-
 * **Por que é indispensável?**
 Se o sistema fizer uma busca vetorial simples por "defesa de Pick and Roll", o modelo retornará trechos de como o *Lakers*, *Nuggets* ou *Warriors* defendem essa jogada, ou relatórios do próprio *Celtics* da temporada passada. Aplicando o filtro pré-busca (`time_adversario == "Boston Celtics"` AND `fase_jogo == "defesa_pnr"` AND `is_latest == true`), o banco reduz a busca exclusivamente aos relatórios do rival atual.
 
@@ -475,7 +461,6 @@ A extração utiliza uma estratégia em três camadas durante a ingestão:
 2. **Parsing do Cabeçalho e Estrutura do Documento (Structural Parsing):**
 * O `RecursiveCharacterTextSplitter` preserva a hierarquia Markdown (`#`, `##`), preenchendo o campo `section` a partir do título do tópico atual.
 * `page` e `chunk_index` são gerados iterativamente pelos parsers de PDF e splitters.
-
 
 3. **Extração Semântica Estruturada via LLM (LLM-Based Extraction):**
 * Antes do embedding, o texto do chunk passa por um modelo LLM leve com **Structured Output (JSON Schema / Pydantic)** para identificar entidades citadas no texto, preenchendo os campos `jogadores_foco` e `fase_jogo`.
@@ -568,7 +553,6 @@ Para provar a qualidade da escolha de chunking no cenário da NBA, eu juntaria d
    * Montar um conjunto de teste (*Ground Truth*) com **20 perguntas táticas reais** elaboradas pelos analistas de *scouting* do time, pareadas com as respostas ideais extraídas dos relatórios originais.
    * **Evidência Definitiva:** Rodar o benchmark comparando a taxa de acerto do RAG com diferentes tamanhos de chunk (ex: 200 vs 450 vs 1000 caracteres) e provar que a configuração de **450 caracteres** gerou a maior taxa de acerto em perguntas sobre esquemas defensivos e jogadas específicas.
 
-
 # Parte 6 - Embeddings
 
 ## Cenário A: Assistente de Scouting e Análise Tática para Franquia da NBA
@@ -628,7 +612,6 @@ Análises táticas misturam inglês (linguagem padrão do basquete mundial, como
 * **Por que operar tão abaixo do limite do modelo?** 
   Embora o modelo suporte entradas gigantes, criar *chunks* próximos do limite de 8.191 tokens causaria o fenômeno de **diluição do embedding**: o vetor representaria a média geral de várias páginas e perderia a capacidade de encontrar detalhes específicos (ex: uma rotação de ajuda na linha de fundo). A decisão da Parte 5 garante que cada vetor de 1.536 dimensões fique totalmente denso e focado em uma única instrução tática.
 
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ---
@@ -657,7 +640,6 @@ Além disso, equipes editoriais lidam com centenas de manuscritos, resenhas e re
 * **Cargo:** Leitor comum / Assinante de e-commerce ou biblioteca digital.
 * **Contexto de Uso:** Busca por próximas leituras via aplicativo mobile ou web no momentos de lazer.
 * **Nível Técnico:** Leigo.
-
 
 ---
 
@@ -755,11 +737,9 @@ Abaixo estão três alternativas analíticas para este cenário:
 * *Aplicações:* Para obter metadados exatos de catálogo (ex: filtrar por ISBN, preço, data de publicação, quantidade de cópias em estoque ou formato do arquivo).
 * *Por que supera o RAG:* O RAG pode falhar ao tentar recuperar um ISBN exato via busca por similaridade de vetores (*cosine similarity*), enquanto uma consulta SQL executada diretamente sobre um banco relacional entrega o resultado exato em milissegundos.
 
-
 2. **Busca Tradicional por Palavra-Chave (*Keyword Search* / BM25 / Full-Text Search):**
 * *Aplicações:* Para localizar nomes próprios raros de autores, termos específicos de edições especiais ou títulos exatos no acervo.
 * *Por que supera o RAG:* Modelos de embedding nem sempre convertem nomes próprios raros ou códigos comerciais para representações vetoriais precisas. A busca por palavra-chave garante correspondência exata para termos específicos sem dependência de interpretação semântica.
-
 
 3. **Combinação de Busca Híbrida (BM25 + RAG) com Roteamento SQL (Text-to-SQL / Multi-Agent):**
 * *Aplicações:* Para responder a perguntas complexas do leitor ou editor que combinem necessidades semânticas ("livros com atmosfera melancólica") com restrições estruturadas ("publicados entre 2021 e 2023 com menos de 300 páginas").
@@ -771,7 +751,6 @@ Abaixo estão três alternativas analíticas para este cenário:
 
 * **Exemplo de Pergunta em que o RAG Falharia:**
 > *"Quantos livros do gênero ficção científica publicados após 2020 temos no catálogo e qual é o preço médio dessas obras?"*
-
 
 * **Por que o RAG responderia mal?**
 O RAG precisaria recuperar dezenas ou centenas de *chunks* espalhados pelo banco vetorial contendo metadados de cada livro de ficção científica, enviar todos esses blocos de texto na janela de contexto do LLM e "esperar" que o modelo conte os livros um a um e faça a média aritmética dos preços no texto. Isso gera alto custo de tokens, alta latência e, fundamentalmente, risco de **erro de contagem e cálculo estatístico** (o LLM não é um motor de execução aritmética garantido).
@@ -795,7 +774,6 @@ Se o usuário fizesse uma pergunta como *"Ordene todos os pareceres de leitura d
 1. **Truncamento de Contexto (*Top-K Limit*):** O *retriever* RAG opera limitando a busca aos top-$K$ *chunks* mais similares (ex: $K=5$ ou $K=10$). Ele não trará **todos** os documentos do catálogo para a resposta, omitindo dados e gerando uma ordenação/contagem incompleta.
 2. **Efeito *Lost in the Middle*:** Mesmo se os $K$ *chunks* fossem expandidos para cobrir centenas de páginas, o LLM perde capacidade de atenção em contextos excessivamente longos, ignorando dados localizados no meio do prompt.
 3. **Incapacidade de Agregação e Ordenação Precisa:** LLMs realizam previsão probabilística do próximo token; eles não possuem um motor interno de ordenação estruturada ou agregação de dados. A chance de o modelo "alucinar" a ordem correta ou pular itens na contagem é extremamente alta.
-
 
 # Parte 2 - Organização dos Documentos
 
@@ -843,7 +821,6 @@ acervo_editorial/
 │           └── report_ms_8921_versao_final.md
 └── metadados_gerais/
     └── taxonomia_tematica_2026.json
-
 
 ```
 # Parte 2 - Organização dos Documentos
@@ -917,13 +894,10 @@ Isola em uma única pasta o livro completo (`.epub`), os pareceres internos (`.m
 2. **Dados Pessoais Sensíveis de Autores e Pareceristas (LGPD):** Endereços pessoais, dados bancários, números de documentos e contatos privados arquivados no cadastro do autor.
 3. **Anotações Informais e Rascunhos Não Aprovados:** Notas pessoais de pareceristas que não passaram pelo crivo do editor sênior.
 
-
 * **Mecanismos de Prevenção:**
 * **Validação por Schema no Pipeline de Carga:** O script de ingestão aceita apenas arquivos localizados dentro dos diretórios homologados (`/catalogo_publicado/` e `/manuscritos_em_avaliacao/reader_reports/`).
 * **Filtro de Front-Matter e Tags:** Arquivos com o cabeçalho contendo `sigiloso: true` ou `status: rascunho` são ignorados automaticamente pela rotina de ingestão.
 * **Varredura por Regex de Dados Pessoais:** O pipeline aplica expressões regulares para detectar e bloquear arquivos contendo padrões de CPF, e-mail, telefone ou valores monetários/dados bancários.
-
-
 
 #### Como você lidaria com VERSÕES do mesmo documento?
 
@@ -933,7 +907,6 @@ Isola em uma única pasta o livro completo (`.epub`), os pareceres internos (`.m
 2. **Depreciação por Soft-Delete:** Quando a versão 2 de um relatório ou manuscrito é ingerida, a pipeline atualiza os vetores da versão anterior alterando `is_latest` de `true` para `false` e definindo `status: arquivado`.
 3. **Filtro Padrão no Pre-Retrieval:** As buscas do sistema aplicam, por padrão, o filtro rígido `is_latest == true`. A versão antiga só é recuperada se o editor solicitar explicitamente um histórico de revisões (ex: *"O que mudou do primeiro parecer para a versão final do manuscrito?"*).
 
-
 ```
 
 ```
@@ -941,7 +914,6 @@ Isola em uma única pasta o livro completo (`.epub`), os pareceres internos (`.m
 # Parte 3 - Pipeline de Ingestão
 
 ## Cenário A: Assistente de Scouting e Análise Tática para Franquia da NBA
-
 
 [ Documentos Brutos ] ──► [ 1. Extração ] ──► [ 2. Limpeza ] ──► [ 3. Metadados ]
 • EPUBs (Obras)           • ebooklib / BS4    • Normaliza UTF-8  • LLM Structured Output
@@ -1042,7 +1014,6 @@ Muitas campanhas editoriais modernas acompanham materiais audiovisuais (audioliv
 > **O Resultado:** O sistema fundiu a linha 1 da Coluna A com a linha 1 da Coluna B, criando frases sem nexo semântico (ex: *"O protagonista caminha pela floresta quando o mercado editorial em 2024 encontrou um destino trágico projetou um crescimento de 5%"*).
 > **A Solução:** Substituição da biblioteca por `pdfplumber` com agrupamento de palavras por caixa delimitadora (*bounding box*), forçando a extração vertical da Coluna A completa antes de iniciar a extração da Coluna B.
 
-
 # Parte 3.2 - Limpeza e Normalização
 
 ## Cenário B: Assistente de Curadoria Editorial e Recomendação Literária
@@ -1067,11 +1038,9 @@ Muitas campanhas editoriais modernas acompanham materiais audiovisuais (audioliv
 * Travessões longos de diálogo (`—` ou `–`) convertidos para um padrão único (`-` ou `—`), garantindo que o tokenizador identifique trocas de turno em diálogos de forma consistente.
 * Reticências tipográficas (`…`) expandidas para três pontos (`...`).
 
-
 * **Quebras de Linha e Estrutura de Parágrafos:**
 * Remoção de quebras de linha artificiais geradas pelas margens fixas do PDF (reunindo linhas que pertencem ao mesmo parágrafo).
 * Preservação estrita das quebras duplas de linha (`\n\n`), fundamentais para delimitar parágrafos e transições narrativas.
-
 
 * **Hifenização de Margem:** Reconstrução de palavras divididas no fim da linha via expressões regulares acopladas a dicionários ortográficos em português (ex: `recomen- \n dação` -> `recomendação`).
 * **Espaçamento em Branco:** Eliminação de espaços múltiplos consecutivos (`"   "` -> `" "`) e remoção de tabulações desnecessárias (`\t`).
@@ -1085,7 +1054,6 @@ Muitas campanhas editoriais modernas acompanham materiais audiovisuais (audioliv
 * **Eliminação de Notas de Rodapé Relevantes:** Em ensaios, biografias, edições críticas e ficções históricas, as notas de rodapé do tradutor ou do editor contêm explicações contextuais vitais. Apagar notas de rodapé na limpeza faz com que o modelo perca o contexto histórico de termos e eventos narrados.
 * **Perda de Ambiguidade de Diálogos:** A remoção de marcações de margem ou nomes de personagens em notas laterais pode tornar confuso quem é o locutor em sequências de diálogos curtos, fazendo o LLM atribuir falas ao personagem errado no momento da geração.
 
-
 ### 3.3 Detalhamento da Frequência de Ingestão e Ciclo de Vida
 
 No ambiente editorial, a ingestão de dados precisa acompanhar o ritmo de produção de novos lançamentos e o fluxo continuo de avaliação de manuscritos, equilibrando o tempo de processamento com o custo de chamadas de API.
@@ -1097,7 +1065,6 @@ No ambiente editorial, a ingestão de dados precisa acompanhar o ritmo de produ�
 * **Modo de Execução:** O pipeline opera de forma **híbrida: Orientada a Eventos (*Event-Driven*) e Agendada (*Cron Job*)**.
 1. **Orientada a Eventos (Sob Demanda via File Watcher / Webhook do CMS):** Quando um parecerista envia um novo relatório de leitura (`.md` ou `.docx`) para a pasta de avaliação, ou quando o time de produção envia a versão final de um livro (`.epub`), um serviço monitor (*File Watcher*) detecta a adição do arquivo e dispara o pipeline imediatamente para aquele documento específico.
 2. **Agendada (Noturna / Batch Cron Job):** Um *Cron Job* roda diariamente às 02:00 AM para sincronizar o banco de metadados do ERP da editora (preços, status de catálogo, atualizações de ISBN) com as fichas `.json` e verificar eventuais falhas de sincronização na Vector Store.
-
 
 * **Frequência de Chegada de Novos Documentos:**
 * **Relatórios de Leitura e Manuscritos (*Fluxo Contínuo*):** Chegada de 15 a 30 novos relatórios (*reader reports*) por semana, enviados pela equipe de pareceristas.
@@ -1126,7 +1093,6 @@ O sistema consulta o manifesto de ingestão da editora:
 * O sistema busca na Vector Store (Qdrant/ChromaDB) todos os vetores antigos vinculados àquele `document_id` ou `isbn`.
 * Executa a **deleção lógica/física dos vetores antigos** daquela versão específica.
 * Gera os novos *chunks*, recalcula os embeddings da nova versão e realiza a inserção dos vetores atualizados (*Upsert*), atualizando a tag `is_latest: true`.
-
 
 # Parte 4 - Metadados
 
@@ -1231,7 +1197,6 @@ Aqui está o detalhamento completo dos **Metadados do Documento (Parte 4.1)** ad
 * **Exemplo de Pergunta em que o Filtro é Indispensável:**
 > *"No primeiro livro de Harry Potter, em qual cena e capítulo o protagonista descobre a qual casa de Hogwarts ele pertence?"*
 
-
 * **Por que o filtro é indispensável?**
 Sem os filtros `nome_serie == "Harry Potter"`, `ordem_serie == 1` e `document_type == "livro_integral"`, a busca por similaridade vetorial traria trechos do livro 5 ou 7 (onde a seleção do Chapéu é relembrada em *flashbacks* ou conversas) ou pareceres críticos de editores analisando o capítulo. Com o filtro, a busca foca **exclusivamente** no texto original do Volume 1 (*Pedra Filosofal*).
 
@@ -1269,7 +1234,6 @@ Considerando que os 7 livros de *Harry Potter* geram cerca de **4.500 chunks**, 
 2. **Parsing Estrutural do Arquivo `.epub` (Parsing de Tags):**
 * `section` (título do capítulo) e `chunk_index` são extraídos inspecionando a hierarquia de tags HTML do arquivo EPUB (`<h1>`, `<section>`).
 * `page` é calculada com base no mapa de páginas estáticas ou marcadores de quebra de página do EPUB.
-
 
 3. **Extração Semântica por LLM (Structured Output):**
 * Cada bloco de texto extraído é enviado a um LLM leve (`gpt-4o-mini`) configurado com **Pydantic / JSON Schema**, que lê o trecho e extrai automaticamente as listas `temas_chave`, `elementos_mágicos` e a string `tom_narrativo` para popular o registro antes da vetorização.
@@ -1475,15 +1439,12 @@ As arquiteturas compartilham quatro pilares fundamentais:
 * Avaliar manuscritos e decidir publicações é a atividade-fim mais crítica de uma editora. Um erro de avaliação (rejeitar um novo fenômeno literário ou aprovar uma obra sem apelo comercial) custa centenas de milhares de reais.
 * Um assistente RAG focado no comitê editorial otimiza o tempo dos pareceristas em até 60%, acelera a tomada de decisão sobre novos títulos e cria uma memória de inteligência editorial histórica.
 
-
 2. **Desafio de Engenharia de IA Mais Robusto:**
 * O Cenário B exige resolver o problema do **RAG On-Premises/Privado**, que é o maior desafio atual das empresas (IA com privacidade total).
 * A implementação de pipelines locais de parsing, embeddings *open source*, vector stores em containers fechados e LLMs locais (*Llama 3*) cria uma infraestrutura de dados madura e proprietária que se torna um ativo valioso para a empresa.
 
-
 3. **Validação Antes do Lançamento Externo:**
 * Construir primeiro o sistema interno permite homologar a taxonomia de metadados, testar os algoritmos de limpeza e validar o banco vetorial dentro de casa, com usuários especialistas (editores). Uma vez consolidada essa base, estendê-la para o aplicativo público do leitor (Cenário A) torna-se um passo natural e muito mais seguro.
-
 
 Como toda a arquitetura, diagramas, schemas de metadados, estratégias de *chunking* e comparações apresentadas ao longo da atividade foram construídos **de forma autônoma e analítica** a partir dos conceitos de Engenharia de RAG (*Retrieval-Augmented Generation*), não houve necessidade de realizar pesquisas externas para gerar o conteúdo.
 
